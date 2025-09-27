@@ -1,30 +1,30 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}جستجو - گفتگو{% endblock %}
+{% block title %}Ҷустуҷў - Гуфтугў{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-12">
-        <h1>جستجوی پیشرفته</h1>
-        <p class="text-muted">در کل اشعار، شاعران و کتاب‌ها جستجو کنید</p>
+        <h1 class="fade-in">Ҷустуҷўи пешрафта</h1>
+        <p class="text-muted">Дар ҳамаи шеърҳо, шоирон ва китобҳо ҷустуҷў кунед</p>
     </div>
 </div>
 
 <!-- Search Form -->
 <div class="row mb-5">
     <div class="col-12">
-        <form method="GET" class="row g-3">
-            <div class="col-md-6">
-                <label for="q" class="form-label">کلیدواژه:</label>
+        <form method="GET" style="display: flex; flex-wrap: wrap; gap: 1rem; background: white; padding: 2rem; border-radius: 20px; box-shadow: var(--card-shadow);">
+            <div style="flex: 1; min-width: 300px;">
+                <label for="q" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Калидвожа:</label>
                 <input type="text" class="form-control" id="q" name="q" value="{{ query }}" 
-                       placeholder="متن شعر، نام شاعر یا عنوان کتاب...">
+                       placeholder="Матни шеър, номи шоир ё унвони китоб...">
             </div>
             
-            <div class="col-md-3">
-                <label for="poet" class="form-label">شاعر:</label>
-                <select class="form-select" id="poet" name="poet">
-                    <option value="">همه شاعران</option>
+            <div style="flex: 0 0 200px;">
+                <label for="poet" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Шоир:</label>
+                <select class="form-control" id="poet" name="poet">
+                    <option value="">Ҳамаи шоирон</option>
                     {% for poet in poets %}
                     <option value="{{ poet.slug }}" {% if poet_filter == poet.slug %}selected{% endif %}>
                         {{ poet.name }}
@@ -33,10 +33,10 @@
                 </select>
             </div>
             
-            <div class="col-md-3">
-                <label for="book" class="form-label">کتاب:</label>
-                <select class="form-select" id="book" name="book">
-                    <option value="">همه کتاب‌ها</option>
+            <div style="flex: 0 0 200px;">
+                <label for="book" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Китоб:</label>
+                <select class="form-control" id="book" name="book">
+                    <option value="">Ҳамаи китобҳо</option>
                     {% for book in books %}
                     <option value="{{ book.slug }}" {% if book_filter == book.slug %}selected{% endif %}>
                         {{ book.title }} - {{ book.poet.name }}
@@ -45,13 +45,12 @@
                 </select>
             </div>
             
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-search me-2"></i>
-                    جستجو
+            <div style="align-self: flex-end;">
+                <button type="submit" class="btn btn-primary" style="margin-right: 0.5rem;">
+                    Ҷустуҷў
                 </button>
-                <a href="{% url 'search' %}" class="btn btn-outline-secondary ms-2">
-                    پاک کردن
+                <a href="{% url 'search' %}" class="btn btn-outline-light" style="background: rgba(37, 99, 235, 0.1); color: var(--primary-color); border-color: var(--primary-color);">
+                    Пок кардан
                 </a>
             </div>
         </form>
@@ -63,21 +62,21 @@
 <div class="row">
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3>نتایج جستجو</h3>
-            <span class="badge bg-primary fs-6">{{ total_results }} نتیجه</span>
+            <h3 class="fade-in">Натиҷаҳои ҷустуҷў</h3>
+            <span class="badge">{{ total_results }} натиҷа</span>
         </div>
         
         {% if query %}
-        <div class="alert alert-info">
-            <strong>جستجو برای:</strong> "{{ query }}"
-            {% if poet_filter %} در آثار 
+        <div class="alert alert-info fade-in">
+            <strong>Ҷустуҷў барои:</strong> "{{ query }}"
+            {% if poet_filter %} дар осори 
             <strong>
                 {% for poet in poets %}
                     {% if poet.slug == poet_filter %}{{ poet.name }}{% endif %}
                 {% endfor %}
             </strong>
             {% endif %}
-            {% if book_filter %} در کتاب 
+            {% if book_filter %} дар китоби 
             <strong>
                 {% for book in books %}
                     {% if book.slug == book_filter %}{{ book.title }}{% endif %}
@@ -92,89 +91,54 @@
 <div class="row">
     {% for poem in page_obj %}
     <div class="col-12 mb-4">
-        <div class="card">
+        <div class="card fade-in">
             <div class="card-body">
                 <h5 class="card-title">
-                    <a href="{% url 'poem_detail' poem.book.slug poem.slug %}" class="text-decoration-none">
+                    <a href="{% url 'poem_detail' poem.book.slug poem.slug %}" style="color: var(--primary-color); text-decoration: none;">
                         {{ poem.title }}
                     </a>
                 </h5>
                 
                 <h6 class="card-subtitle mb-2 text-muted">
-                    <a href="{% url 'poet_detail' poem.book.poet.slug %}" class="text-decoration-none">
+                    <a href="{% url 'poet_detail' poem.book.poet.slug %}" style="color: var(--secondary-color); text-decoration: none;">
                         {{ poem.book.poet.name }}
                     </a>
                      - 
-                    <a href="{% url 'book_detail' poem.book.slug %}" class="text-decoration-none">
+                    <a href="{% url 'book_detail' poem.book.slug %}" style="color: var(--secondary-color); text-decoration: none;">
                         {{ poem.book.title }}
                     </a>
                 </h6>
                 
-                <p class="card-text">
+                <p class="card-text" style="line-height: 1.6; color: #4a5568;">
                     {{ poem.content|truncatewords:30 }}
                 </p>
                 
-                <a href="{% url 'poem_detail' poem.book.slug poem.slug %}" class="btn btn-outline-primary btn-sm">
-                    مطالعه کامل
+                <a href="{% url 'poem_detail' poem.book.slug poem.slug %}" class="btn btn-primary btn-sm">
+                    Мутолиаи пурра
                 </a>
             </div>
         </div>
     </div>
     {% empty %}
     <div class="col-12">
-        <div class="alert alert-warning text-center">
-            <h5>نتیجه‌ای یافت نشد</h5>
-            <p class="mb-0">لطفاً کلیدواژه‌های دیگری امتحان کنید یا فیلترها را تغییر دهید.</p>
+        <div class="alert alert-warning text-center fade-in">
+            <h5>Ҳеч натиҷае ёфт нашуд</h5>
+            <p class="mb-0">Лутфан калидвожаҳои дигарро кӯшиш кунед ё филтрҳоро тағйир диҳед.</p>
         </div>
     </div>
     {% endfor %}
 </div>
 
-<!-- Pagination -->
-{% if page_obj.has_other_pages %}
-<nav aria-label="صفحه‌بندی نتایج جستجو">
-    <ul class="pagination justify-content-center">
-        {% if page_obj.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}&poet={{ poet_filter }}&book={{ book_filter }}" aria-label="قبلی">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>
-        {% endif %}
-        
-        {% for num in page_obj.paginator.page_range %}
-        {% if page_obj.number == num %}
-        <li class="page-item active">
-            <span class="page-link">{{ num }}</span>
-        </li>
-        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ num }}&q={{ query }}&poet={{ poet_filter }}&book={{ book_filter }}">{{ num }}</a>
-        </li>
-        {% endif %}
-        {% endfor %}
-        
-        {% if page_obj.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}&poet={{ poet_filter }}&book={{ book_filter }}" aria-label="بعدی">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
-        {% endif %}
-    </ul>
-</nav>
-{% endif %}
-
 {% else %}
 <!-- No search performed yet -->
 <div class="row">
     <div class="col-12">
-        <div class="alert alert-info text-center">
-            <h5>راهنمای جستجو</h5>
-            <ul class="list-unstyled mb-0">
-                <li>• برای جستجوی کامل، کلیدواژه مورد نظر خود را وارد کنید</li>
-                <li>• می‌توانید جستجو را به شاعر یا کتاب خاص محدود کنید</li>
-                <li>• جستجو در عنوان اشعار، متن اشعار، نام شاعران و عنوان کتاب‌ها انجام می‌شود</li>
+        <div class="alert alert-info text-center fade-in">
+            <h5>Роҳнамои ҷустуҷў</h5>
+            <ul style="list-style: none; padding: 0;">
+                <li>• Барои ҷустуҷўи комил, калидвожаи мавриди назари худро ворид кунед</li>
+                <li>• Метавонед ҷустуҷўро ба шоир ё китоби хос маҳдуд кунед</li>
+                <li>• Ҷустуҷў дар унвони шеърҳо, матни шеърҳо, номи шоирон ва унвони китобҳо анҷом мешавад</li>
             </ul>
         </div>
     </div>
