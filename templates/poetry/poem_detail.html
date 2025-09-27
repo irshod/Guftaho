@@ -4,37 +4,37 @@
 
 {% block content %}
 <!-- Breadcrumb Navigation -->
-<nav aria-label="breadcrumb">
+<nav aria-label="breadcrumb" class="scroll-reveal">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'home' %}">خانه</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'poet_detail' book.poet.slug %}">{{ book.poet.name }}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'book_detail' book.slug %}">{{ book.title }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'home' %}" class="keyboard-focus">خانه</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'poet_detail' book.poet.slug %}" class="keyboard-focus">{{ book.poet.name }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'book_detail' book.slug %}" class="keyboard-focus">{{ book.title }}</a></li>
         <li class="breadcrumb-item active">{{ poem.title }}</li>
     </ol>
 </nav>
 
 <!-- Poem Header -->
-<div class="row">
+<div class="row scroll-reveal">
     <div class="col-12 text-center mb-4">
         <h1>{{ poem.title }}</h1>
         <h5 class="text-muted">
             از کتاب 
-            <a href="{% url 'book_detail' book.slug %}" class="text-decoration-none">{{ book.title }}</a>
+            <a href="{% url 'book_detail' book.slug %}" class="text-decoration-none keyboard-focus">{{ book.title }}</a>
         </h5>
         <h6 class="text-muted">
             سروده: 
-            <a href="{% url 'poet_detail' book.poet.slug %}" class="text-decoration-none">{{ book.poet.name }}</a>
+            <a href="{% url 'poet_detail' book.poet.slug %}" class="text-decoration-none keyboard-focus">{{ book.poet.name }}</a>
         </h6>
     </div>
 </div>
 
 <!-- Poem Navigation -->
-<div class="row mb-4">
+<div class="row mb-4 scroll-reveal">
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center">
             <div>
                 {% if previous_poem %}
-                <a href="{% url 'poem_detail' book.slug previous_poem.slug %}" class="btn btn-outline-primary">
+                <a href="{% url 'poem_detail' book.slug previous_poem.slug %}" class="btn btn-outline-primary keyboard-focus">
                     <i class="fas fa-chevron-right me-2"></i>
                     شعر قبلی
                 </a>
@@ -42,14 +42,14 @@
             </div>
             
             <div>
-                <a href="{% url 'book_detail' book.slug %}" class="btn btn-outline-secondary btn-sm">
-                    فهرست اشعار
+                <a href="{% url 'book_detail' book.slug %}" class="btn btn-outline-secondary btn-sm keyboard-focus">
+                    📚 فهرست اشعار
                 </a>
             </div>
             
             <div>
                 {% if next_poem %}
-                <a href="{% url 'poem_detail' book.slug next_poem.slug %}" class="btn btn-outline-primary">
+                <a href="{% url 'poem_detail' book.slug next_poem.slug %}" class="btn btn-outline-primary keyboard-focus">
                     شعر بعدی
                     <i class="fas fa-chevron-left ms-2"></i>
                 </a>
@@ -60,20 +60,20 @@
 </div>
 
 <!-- Poem Content -->
-<div class="row">
+<div class="row scroll-reveal">
     <div class="col-12">
-        <div class="poem-content">
+        <div class="poem-content" id="poem-content">
             {{ poem.content }}
         </div>
     </div>
 </div>
 
 <!-- Bottom Navigation -->
-<div class="row mt-5">
+<div class="row mt-5 scroll-reveal">
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center flex-wrap">
             {% if previous_poem %}
-            <a href="{% url 'poem_detail' book.slug previous_poem.slug %}" class="btn btn-primary mb-2">
+            <a href="{% url 'poem_detail' book.slug previous_poem.slug %}" class="btn btn-primary mb-2 keyboard-focus">
                 <i class="fas fa-chevron-right me-2"></i>
                 {{ previous_poem.title }}
             </a>
@@ -81,13 +81,13 @@
             <div></div>
             {% endif %}
             
-            <a href="{% url 'book_detail' book.slug %}" class="btn btn-outline-secondary mb-2">
+            <a href="{% url 'book_detail' book.slug %}" class="btn btn-outline-secondary mb-2 keyboard-focus">
                 <i class="fas fa-list me-2"></i>
                 فهرست کامل اشعار
             </a>
             
             {% if next_poem %}
-            <a href="{% url 'poem_detail' book.slug next_poem.slug %}" class="btn btn-primary mb-2">
+            <a href="{% url 'poem_detail' book.slug next_poem.slug %}" class="btn btn-primary mb-2 keyboard-focus">
                 {{ next_poem.title }}
                 <i class="fas fa-chevron-left ms-2"></i>
             </a>
@@ -101,14 +101,34 @@
 <!-- Share and Print Options -->
 <div class="row mt-4">
     <div class="col-12 text-center">
-        <div class="btn-group" role="group">
-            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="window.print()">
+        <div class="btn-group" role="group" style="margin-bottom: 1rem;">
+            <button type="button" class="btn btn-outline-secondary btn-sm keyboard-focus" onclick="window.print()">
                 <i class="fas fa-print me-2"></i>
                 چاپ
             </button>
-            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="copyToClipboard()">
+            <button type="button" class="btn btn-outline-secondary btn-sm copy-text keyboard-focus">
                 <i class="fas fa-copy me-2"></i>
                 کپی متن
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm keyboard-focus" onclick="sharePoem('{{ poem.title }} - {{ book.poet.name }}', '{{ request.build_absolute_uri }}')">
+                <i class="fas fa-share-alt me-2"></i>
+                اشتراک‌گذاری
+            </button>
+        </div>
+        
+        <!-- Social Share Buttons -->
+        <div class="share-buttons">
+            <button class="share-btn facebook" onclick="shareOnFacebook('{{ request.build_absolute_uri }}', '{{ poem.title }} - {{ book.poet.name }}')" title="Share on Facebook">
+                📘
+            </button>
+            <button class="share-btn twitter" onclick="shareOnTwitter('{{ request.build_absolute_uri }}', '{{ poem.title }} - {{ book.poet.name }}')" title="Share on Twitter">
+                🐦
+            </button>
+            <button class="share-btn telegram" onclick="shareOnTelegram('{{ request.build_absolute_uri }}', '{{ poem.title }} - {{ book.poet.name }}')" title="Share on Telegram">
+                ✈️
+            </button>
+            <button class="share-btn whatsapp" onclick="shareOnWhatsApp('{{ request.build_absolute_uri }}', '{{ poem.title }} - {{ book.poet.name }}')" title="Share on WhatsApp">
+                💬
             </button>
         </div>
     </div>

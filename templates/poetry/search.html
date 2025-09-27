@@ -4,9 +4,9 @@
 {% block title %}Ҷустуҷў - Гуфтугў{% endblock %}
 
 {% block content %}
-<div class="row">
+<div class="row scroll-reveal">
     <div class="col-12">
-        <h1 class="fade-in">Ҷустуҷўи пешрафта</h1>
+        <h1 class="fade-in">🔍 Ҷустуҷўи пешрафта</h1>
         <p class="text-muted">Дар ҳамаи шеърҳо, шоирон ва китобҳо ҷустуҷў кунед</p>
     </div>
 </div>
@@ -14,61 +14,63 @@
 <!-- Search Form -->
 <div class="row mb-5">
     <div class="col-12">
-        <form method="GET" style="display: flex; flex-wrap: wrap; gap: 1rem; background: white; padding: 2rem; border-radius: 20px; box-shadow: var(--card-shadow);">
-            <div style="flex: 1; min-width: 300px;">
-                <label for="q" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Калидвожа:</label>
-                <input type="text" class="form-control" id="q" name="q" value="{{ query }}" 
-                       placeholder="Матни шеър, номи шоир ё унвони китоб...">
-            </div>
-            
-            <div style="flex: 0 0 200px;">
-                <label for="poet" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Шоир:</label>
-                <select class="form-control" id="poet" name="poet">
-                    <option value="">Ҳамаи шоирон</option>
-                    {% for poet in poets %}
-                    <option value="{{ poet.slug }}" {% if poet_filter == poet.slug %}selected{% endif %}>
-                        {{ poet.name }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-            
-            <div style="flex: 0 0 200px;">
-                <label for="book" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Китоб:</label>
-                <select class="form-control" id="book" name="book">
-                    <option value="">Ҳамаи китобҳо</option>
-                    {% for book in books %}
-                    <option value="{{ book.slug }}" {% if book_filter == book.slug %}selected{% endif %}>
-                        {{ book.title }} - {{ book.poet.name }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </div>
-            
-            <div style="align-self: flex-end;">
-                <button type="submit" class="btn btn-primary" style="margin-right: 0.5rem;">
-                    Ҷустуҷў
-                </button>
-                <a href="{% url 'search' %}" class="btn btn-outline-light" style="background: rgba(37, 99, 235, 0.1); color: var(--primary-color); border-color: var(--primary-color);">
-                    Пок кардан
-                </a>
-            </div>
-        </form>
+        <div class="search-card scroll-reveal">
+            <form method="GET" class="search-filters">
+                <div>
+                    <label for="q" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--primary-color);">📝 Калидвожа:</label>
+                    <input type="text" class="form-control keyboard-focus" id="q" name="q" value="{{ query }}" 
+                           placeholder="Матни шеър, номи шоир ё унвони китоб..." autocomplete="off">
+                </div>
+                
+                <div>
+                    <label for="poet" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--primary-color);">👤 Шоир:</label>
+                    <select class="form-control keyboard-focus" id="poet" name="poet">
+                        <option value="">Ҳамаи шоирон</option>
+                        {% for poet in poets %}
+                        <option value="{{ poet.slug }}" {% if poet_filter == poet.slug %}selected{% endif %}>
+                            {{ poet.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="book" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--primary-color);">📚 Китоб:</label>
+                    <select class="form-control keyboard-focus" id="book" name="book">
+                        <option value="">Ҳамаи китобҳо</option>
+                        {% for book in books %}
+                        <option value="{{ book.slug }}" {% if book_filter == book.slug %}selected{% endif %}>
+                            {{ book.title }} - {{ book.poet.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div style="margin-top: 1.5rem; text-align: center;">
+                    <button type="submit" class="btn btn-primary keyboard-focus" style="margin-right: 0.5rem;">
+                        🔍 Ҷустуҷў
+                    </button>
+                    <a href="{% url 'search' %}" class="btn btn-outline-secondary keyboard-focus">
+                        🗑️ Пок кардан
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <!-- Search Results -->
 {% if query or poet_filter or book_filter %}
-<div class="row">
+<div class="row scroll-reveal">
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fade-in">Натиҷаҳои ҷустуҷў</h3>
+            <h3>✨ Натиҷаҳои ҷустуҷў</h3>
             <span class="badge">{{ total_results }} натиҷа</span>
         </div>
         
         {% if query %}
-        <div class="alert alert-info fade-in">
-            <strong>Ҷустуҷў барои:</strong> "{{ query }}"
+        <div class="alert alert-info scroll-reveal">
+            <strong>🔍 Ҷустуҷў барои:</strong> "{{ query }}"
             {% if poet_filter %} дар осори 
             <strong>
                 {% for poet in poets %}
@@ -90,39 +92,39 @@
 
 <div class="row">
     {% for poem in page_obj %}
-    <div class="col-12 mb-4">
-        <div class="card fade-in">
+    <div class="col-12 mb-4 scroll-reveal">
+        <div class="card">
             <div class="card-body">
                 <h5 class="card-title">
-                    <a href="{% url 'poem_detail' poem.book.slug poem.slug %}" style="color: var(--primary-color); text-decoration: none;">
-                        {{ poem.title }}
+                    <a href="{% url 'poem_detail' poem.book.slug poem.slug %}" class="text-decoration-none keyboard-focus">
+                        📝 {{ poem.title }}
                     </a>
                 </h5>
                 
                 <h6 class="card-subtitle mb-2 text-muted">
-                    <a href="{% url 'poet_detail' poem.book.poet.slug %}" style="color: var(--secondary-color); text-decoration: none;">
-                        {{ poem.book.poet.name }}
+                    <a href="{% url 'poet_detail' poem.book.poet.slug %}" class="text-decoration-none keyboard-focus">
+                        👤 {{ poem.book.poet.name }}
                     </a>
                      - 
-                    <a href="{% url 'book_detail' poem.book.slug %}" style="color: var(--secondary-color); text-decoration: none;">
-                        {{ poem.book.title }}
+                    <a href="{% url 'book_detail' poem.book.slug %}" class="text-decoration-none keyboard-focus">
+                        📚 {{ poem.book.title }}
                     </a>
                 </h6>
                 
-                <p class="card-text" style="line-height: 1.6; color: #4a5568;">
+                <p class="card-text">
                     {{ poem.content|truncatewords:30 }}
                 </p>
                 
-                <a href="{% url 'poem_detail' poem.book.slug poem.slug %}" class="btn btn-primary btn-sm">
-                    Мутолиаи пурра
+                <a href="{% url 'poem_detail' poem.book.slug poem.slug %}" class="btn btn-outline-primary btn-sm keyboard-focus">
+                    📖 Мутолиаи комил
                 </a>
             </div>
         </div>
     </div>
     {% empty %}
     <div class="col-12">
-        <div class="alert alert-warning text-center fade-in">
-            <h5>Ҳеч натиҷае ёфт нашуд</h5>
+        <div class="alert alert-warning text-center scroll-reveal">
+            <h5>❌ Ҳеч натиҷае ёфт нашуд</h5>
             <p class="mb-0">Лутфан калидвожаҳои дигарро кӯшиш кунед ё филтрҳоро тағйир диҳед.</p>
         </div>
     </div>
@@ -133,15 +135,51 @@
 <!-- No search performed yet -->
 <div class="row">
     <div class="col-12">
-        <div class="alert alert-info text-center fade-in">
-            <h5>Роҳнамои ҷустуҷў</h5>
-            <ul style="list-style: none; padding: 0;">
-                <li>• Барои ҷустуҷўи комил, калидвожаи мавриди назари худро ворид кунед</li>
-                <li>• Метавонед ҷустуҷўро ба шоир ё китоби хос маҳдуд кунед</li>
-                <li>• Ҷустуҷў дар унвони шеърҳо, матни шеърҳо, номи шоирон ва унвони китобҳо анҷом мешавад</li>
+        <div class="alert alert-info text-center scroll-reveal">
+            <h5>💡 Роҳнамои ҷустуҷў</h5>
+            <ul style="list-style: none; padding: 0; color: #0277bd;">
+                <li>🔸 Барои ҷустуҷўи комил, калидвожаи мавриди назари худро ворид кунед</li>
+                <li>🔸 Метавонед ҷустуҷўро ба шоир ё китоби хос маҳдуд кунед</li>
+                <li>🔸 Ҷустуҷў дар унвони шеърҳо, матни шеърҳо, номи шоирон ва унвони китобҳо анҷом мешавад</li>
             </ul>
         </div>
     </div>
 </div>
 {% endif %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-submit search form on select change
+    const poetSelect = document.getElementById('poet');
+    const bookSelect = document.getElementById('book');
+    const searchInput = document.getElementById('q');
+    
+    if (poetSelect) {
+        poetSelect.addEventListener('change', function() {
+            if (this.value || searchInput.value) {
+                this.form.submit();
+            }
+        });
+    }
+    
+    if (bookSelect) {
+        bookSelect.addEventListener('change', function() {
+            if (this.value || searchInput.value) {
+                this.form.submit();
+            }
+        });
+    }
+    
+    // Search on Enter key
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.form.submit();
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

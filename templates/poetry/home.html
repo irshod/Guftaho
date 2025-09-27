@@ -3,17 +3,17 @@
 {% block title %}Гуфтугў - Шоирони тоҷик{% endblock %}
 
 {% block content %}
-<div class="row">
+<div class="row scroll-reveal">
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="fade-in">Шоирони тоҷик</h1>
-            <span class="badge bg-primary fs-6">{{ total_poets }} шоир</span>
+            <h1>📚 Шоирони тоҷик</h1>
+            <span class="badge">{{ total_poets }} шоир</span>
         </div>
         
         {% if search_query %}
-        <div class="alert alert-info fade-in">
-            <strong>Натиҷаҳои ҷустуҷў барои:</strong> "{{ search_query }}"
-            <a href="{% url 'home' %}" class="btn btn-sm btn-outline-secondary ms-2">Ҷустуҷўро пок кунед</a>
+        <div class="alert alert-info scroll-reveal">
+            <strong>🔍 Натиҷаҳои ҷустуҷў барои:</strong> "{{ search_query }}"
+            <a href="{% url 'home' %}" class="btn btn-sm btn-outline-secondary ms-2 keyboard-focus">🗑️ Ҷустуҷўро пок кунед</a>
         </div>
         {% endif %}
     </div>
@@ -22,9 +22,9 @@
 <div class="row">
     {% for poet in page_obj %}
     <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-        <div class="card poet-card fade-in">
+        <div class="card poet-card scroll-reveal" style="transition-delay: {{ forloop.counter0|add:1 }}00ms;">
             {% if poet.photo %}
-            <img src="{{ poet.photo.url }}" class="card-img-top" alt="{{ poet.name }}">
+            <img src="{{ poet.photo.url }}" class="card-img-top" alt="{{ poet.name }}" loading="lazy">
             {% else %}
             <div class="card-img-top" style="height: 200px; background: linear-gradient(135deg, #f1f5f9, #e2e8f0); display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 3rem;">
                 👤
@@ -32,12 +32,12 @@
             {% endif %}
             
             <div class="card-body">
-                <h5 class="card-title">{{ poet.name }}</h5>
+                <h5 class="card-title">✨ {{ poet.name }}</h5>
                 
                 <div class="mb-2">
                     {% if poet.birth_date %}
                     <small class="text-muted">
-                        Таваллуд: {{ poet.birth_date|date:"Y" }}
+                        📅 Таваллуд: {{ poet.birth_date|date:"Y" }}
                         {% if poet.death_date %} - Вафот: {{ poet.death_date|date:"Y" }}{% endif %}
                     </small>
                     {% endif %}
@@ -48,24 +48,11 @@
                 </p>
                 
                 <div class="mt-auto">
-                    <a href="{% url 'poet_detail' poet.slug %}" class="btn btn-primary btn-sm">
-                        Осорро дидан
+                    <a href="{% url 'poet_detail' poet.slug %}" class="btn btn-primary btn-sm keyboard-focus">
+                        📖 Осорро дидан
                     </a>
                     <small class="text-muted ms-2">
-                        {{ poet.books.count }} китоб
-                    </small>
-                </div>
-            </div>
-        </div>
-    </div>
-                </p>
-                
-                <div class="mt-auto">
-                    <a href="{% url 'poet_detail' poet.slug %}" class="btn btn-primary btn-sm">
-                        Осорро дидан
-                    </a>
-                    <small class="text-muted ms-2">
-                        {{ poet.books.count }} китоб
+                        📚 {{ poet.books.count }} китоб
                     </small>
                 </div>
             </div>
@@ -73,11 +60,11 @@
     </div>
     {% empty %}
     <div class="col-12">
-        <div class="alert alert-warning text-center fade-in">
+        <div class="alert alert-warning text-center scroll-reveal">
             {% if search_query %}
-                Бо ин ҷустуҷў ҳеч шоире ёфт нашуд.
+                ❌ Бо ин ҷустуҷў ҳеч шоире ёфт нашуд.
             {% else %}
-                Ҳанӯз ҳеч шоире илова нашудааст.
+                📝 Ҳанӯз ҳеч шоире илова нашудааст.
             {% endif %}
         </div>
     </div>
@@ -86,12 +73,12 @@
 
 <!-- Pagination -->
 {% if page_obj.has_other_pages %}
-<nav aria-label="Саҳифабандии шоирон">
+<nav aria-label="Саҳифабандии шоирон" class="scroll-reveal">
     <ul class="pagination justify-content-center">
         {% if page_obj.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" aria-label="Пешин">
-                <span aria-hidden="true">&laquo;</span>
+            <a class="page-link keyboard-focus" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" aria-label="Пешин">
+                <span aria-hidden="true">‹</span>
             </a>
         </li>
         {% endif %}
@@ -103,15 +90,15 @@
         </li>
         {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}">{{ num }}</a>
+            <a class="page-link keyboard-focus" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}">{{ num }}</a>
         </li>
         {% endif %}
         {% endfor %}
         
         {% if page_obj.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" aria-label="Оянда">
-                <span aria-hidden="true">&raquo;</span>
+            <a class="page-link keyboard-focus" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" aria-label="Оянда">
+                <span aria-hidden="true">›</span>
             </a>
         </li>
         {% endif %}
