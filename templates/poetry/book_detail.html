@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ book.title }} - {{ book.poet.name }} - گفتگو{% endblock %}
+
+{% block content %}
+<!-- Book Header -->
+<div class="row">
+    <div class="col-md-3">
+        {% if book.cover_image %}
+        <img src="{{ book.cover_image.url }}" class="img-fluid rounded book-cover" alt="{{ book.title }}">
+        {% else %}
+        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 300px;">
+            <i class="fas fa-book fa-4x text-muted"></i>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="col-md-9">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">خانه</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'poet_detail' book.poet.slug %}">{{ book.poet.name }}</a></li>
+                <li class="breadcrumb-item active">{{ book.title }}</li>
+            </ol>
+        </nav>
+        
+        <h1>{{ book.title }}</h1>
+        <h5 class="text-muted mb-3">
+            <a href="{% url 'poet_detail' book.poet.slug %}" class="text-decoration-none">{{ book.poet.name }}</a>
+        </h5>
+        
+        {% if book.publication_date %}
+        <p><strong>تاریخ نشر:</strong> {{ book.publication_date|date:"j F Y" }}</p>
+        {% endif %}
+        
+        {% if book.description %}
+        <div class="mb-4">
+            <h6>درباره کتاب:</h6>
+            <p>{{ book.description|linebreaks }}</p>
+        </div>
+        {% endif %}
+        
+        <div class="alert alert-info">
+            <strong>{{ total_poems }}</strong> شعر در این کتاب موجود است
+        </div>
+    </div>
+</div>
+
+<hr class="my-5">
+
+<!-- Poems List -->
+<div class="row">
+    <div class="col-12">
+        <h3>اشعار</h3>
+    </div>
+</div>
+
+<div class="row">
+    {% for poem in page_obj %}
+    <div class="col-lg-4 col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <a href="{% url 'poem_detail' book.slug poem.slug %}" class="text-decoration-none">
+                        {{ poem.title }}
+                    </a>
+                </h6>
+                <p class="card-text text-muted small">
+                    {{ poem.content|truncatewords:10 }}...
+                </p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{% url 'poem_detail' book.slug poem.slug %}" class="btn btn-sm btn-outline-primary">
+                        خواندن
+                    </a>
+                    <small class="text-muted">شماره {{ poem.order|default:forloop.counter }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-warning text-center">
+            هنوز شعری در این کتاب اضافه نشده است.
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if page_obj.has_other_pages %}
+<nav aria-label="صفحه‌بندی اشعار">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="قبلی">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% endif %}
+        
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <li class="page-item active">
+            <span class="page-link">{{ num }}</span>
+        </li>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="بعدی">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+<!-- Back navigation -->
+<div class="row mt-4">
+    <div class="col-12">
+        <a href="{% url 'poet_detail' book.poet.slug %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-right me-2"></i>
+            بازگشت به آثار {{ book.poet.name }}
+        </a>
+    </div>
+</div>
+{% endblock %}
