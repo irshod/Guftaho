@@ -1,122 +1,364 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="tg" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}گفتگو - کتابخانۀ شعر تاجیک{% endblock %}</title>
+    <title>{% block title %}Гуфтугў - Китобхонаи шеъри тоҷик{% endblock %}</title>
     
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap RTL -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
-    
-    <!-- Custom CSS -->
+    <!-- Inline Bootstrap-like CSS -->
     <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --secondary-color: #64748b;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            --background-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --card-hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Vazirmatn', 'Tahoma', sans-serif;
-            line-height: 1.8;
-            background-color: #f8f9fa;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -15px;
+        }
+        
+        .col-12 { width: 100%; padding: 0 15px; }
+        .col-lg-3 { width: 25%; padding: 0 15px; }
+        .col-md-4 { width: 33.333%; padding: 0 15px; }
+        .col-md-6 { width: 50%; padding: 0 15px; }
+        .col-md-8 { width: 66.666%; padding: 0 15px; }
+        .col-sm-6 { width: 50%; padding: 0 15px; }
+        
+        @media (max-width: 991px) {
+            .col-lg-3 { width: 50%; }
+        }
+        
+        @media (max-width: 767px) {
+            .col-md-4, .col-md-6, .col-md-8, .col-sm-6, .col-lg-3 { width: 100%; }
+        }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+        
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.5rem; }
+        h5 { font-size: 1.25rem; }
+        
+        /* Modern Navbar */
+        .navbar {
+            background: var(--background-gradient) !important;
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
         }
         
         .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: bold;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white !important;
+            text-decoration: none;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: white !important;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .form-control {
+            border-radius: 25px;
+            border: 2px solid #e2e8f0;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            background: rgba(255, 255, 255, 0.9);
+            min-width: 200px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+        }
+        
+        /* Modern Cards */
+        .card {
+            background: white;
+            border: none;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.4s ease;
+            overflow: hidden;
+            position: relative;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
         
         .poet-card {
-            transition: transform 0.2s ease-in-out;
-            border: none;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
         }
         
-        .poet-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--card-hover-shadow);
         }
         
-        .poem-content {
-            font-size: 1.1rem;
-            line-height: 2;
-            white-space: pre-line;
-            text-align: center;
-            margin: 2rem 0;
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--background-gradient);
+        }
+        
+        .card-img-top {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 20px 20px 0 0;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover .card-img-top {
+            transform: scale(1.05);
+        }
+        
+        .card-body {
             padding: 2rem;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
         
-        .search-box {
+        .card-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+        
+        .card-text {
+            flex: 1;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* Modern Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            border: none;
             border-radius: 25px;
+            font-weight: 500;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
         }
         
         .btn-primary {
-            background-color: #0d47a1;
-            border-color: #0d47a1;
+            background: var(--background-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
         }
         
         .btn-primary:hover {
-            background-color: #1565c0;
-            border-color: #1565c0;
-        }
-        
-        .footer {
-            background-color: #2c3e50;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
             color: white;
-            margin-top: 4rem;
+            text-decoration: none;
         }
         
+        .btn-outline-light {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        .btn-outline-light:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .btn-sm {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.85rem;
+        }
+        
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--background-gradient);
+            color: white;
+            border-radius: 15px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        /* Alerts */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .alert-info {
+            background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%);
+            color: #0277bd;
+            border: 1px solid #b3e5fc;
+        }
+        
+        .alert-warning {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+            color: #f57c00;
+            border: 1px solid #ffecb3;
+        }
+        
+        /* Utilities */
+        .d-flex { display: flex; }
+        .justify-content-between { justify-content: space-between; }
+        .justify-content-center { justify-content: center; }
+        .align-items-center { align-items: center; }
+        .text-center { text-align: center; }
+        .text-muted { color: #6c757d; }
+        .mb-4 { margin-bottom: 2rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .ms-2 { margin-left: 0.5rem; }
+        .mt-auto { margin-top: auto; }
+        .my-4 { margin: 2rem 0; }
+        .py-4 { padding: 2rem 0; }
+        .text-end { text-align: right; }
+        
+        /* Additional styles for poet bio */
         .poet-bio {
             font-size: 1.05rem;
-            line-height: 1.8;
+            line-height: 1.7;
+            color: #4a5568;
         }
         
-        .book-cover {
-            max-height: 300px;
-            object-fit: cover;
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+            margin-top: 6rem;
+            padding: 3rem 0;
+            position: relative;
         }
         
-        .nav-pills .nav-link.active {
-            background-color: #0d47a1;
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--background-gradient);
         }
         
+        .footer h5 {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        /* Responsive */
         @media (max-width: 768px) {
-            .poet-card {
-                margin-bottom: 1rem;
+            .navbar-brand { font-size: 1.5rem; }
+            .card-body { padding: 1.5rem; }
+            .form-control { min-width: 150px; }
+            .nav-links { flex-direction: column; gap: 1rem; }
+            .search-form { margin-top: 1rem; }
+            .col-md-4, .col-md-8 { width: 100%; margin-bottom: 2rem; }
+            .footer .col-md-4 { text-align: left !important; }
+        }
+        
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
             }
-            
-            .poem-content {
-                font-size: 1rem;
-                padding: 1rem;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
     </style>
 </head>
-<body>
+<body class="fade-in">
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">گفتگو</a>
+            <a class="navbar-brand" href="{% url 'home' %}">Гуфтугў</a>
             
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}">خانه</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'search' %}">جستجو</a>
-                    </li>
-                </ul>
+            <div class="nav-links">
+                <a class="nav-link" href="{% url 'home' %}">Асосӣ</a>
+                <a class="nav-link" href="{% url 'search' %}">Ҷустуҷў</a>
                 
-                <!-- Quick Search -->
-                <form class="d-flex" action="{% url 'home' %}" method="GET">
-                    <input class="form-control me-2 search-box" type="search" name="search" 
-                           placeholder="جستجوی سریع..." value="{{ search_query }}">
-                    <button class="btn btn-outline-light" type="submit">جستجو</button>
+                <form class="search-form" method="get" action="{% url 'home' %}">
+                    <input class="form-control" type="search" placeholder="Ҷустуҷўи тез..." name="search" value="{{ search_query|default:'' }}">
+                    <button class="btn btn-outline-light" type="submit">Ҷустуҷў</button>
                 </form>
             </div>
         </div>
@@ -126,9 +368,8 @@
     <main class="container my-4">
         {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                <div class="alert alert-{{ message.tags }}">
                     {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             {% endfor %}
         {% endif %}
@@ -142,21 +383,18 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-8">
-                    <h5>گفتگو - کتابخانۀ شعر تاجیک</h5>
-                    <p class="mb-0">مجموعه‌ای جامع از آثار شاعران نامدار تاجیک</p>
+                    <h5>Гуфтугў - Китобхонаи шеъри тоҷик</h5>
+                    <p class="mb-0">Маҷмӯаи ҷомеи осори шоирони номдори тоҷик</p>
                 </div>
                 <div class="col-md-4 text-end">
                     <small class="text-muted">
-                        ساخته شده با ❤️ برای حفظ و نشر فرهنگ تاجیک
+                        бо ❤️ барои ҳифзу ташри фарҳанги тоҷик сохта шуд
                     </small>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
     {% block extra_js %}
     {% endblock %}
 </body>

@@ -23,10 +23,10 @@ class PoetAdmin(admin.ModelAdmin):
     inlines = [BookInline]
     
     fieldsets = (
-        ('اطلاعات اصلی', {
+        ('Маълумоти асосӣ', {
             'fields': ('name', 'slug', 'photo')
         }),
-        ('اطلاعات زندگی', {
+        ('Маълумоти зиндагӣ', {
             'fields': ('birth_date', 'death_date', 'biography')
         }),
     )
@@ -41,10 +41,10 @@ class BookAdmin(admin.ModelAdmin):
     inlines = [PoemInline]
     
     fieldsets = (
-        ('اطلاعات کتاب', {
+        ('Маълумоти китоб', {
             'fields': ('title', 'slug', 'poet', 'cover_image')
         }),
-        ('توضیحات', {
+        ('Тавзеҳот', {
             'fields': ('description', 'publication_date')
         }),
     )
@@ -60,13 +60,13 @@ class PoemAdmin(admin.ModelAdmin):
     
     def poet_name(self, obj):
         return obj.book.poet.name
-    poet_name.short_description = 'شاعر'
+    poet_name.short_description = 'Шоир'
     
     fieldsets = (
-        ('اطلاعات شعر', {
+        ('Маълумоти шеър', {
             'fields': ('title', 'slug', 'book', 'order')
         }),
-        ('متن شعر', {
+        ('Матни шеър', {
             'fields': ('content',)
         }),
     )

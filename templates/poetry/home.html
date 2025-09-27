@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
 
-{% block title %}گفتگو - شاعران تاجیک{% endblock %}
+{% block title %}Гуфтугў - Шоирони тоҷик{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>شاعران تاجیک</h1>
-            <span class="badge bg-primary fs-6">{{ total_poets }} شاعر</span>
+            <h1 class="fade-in">Шоирони тоҷик</h1>
+            <span class="badge bg-primary fs-6">{{ total_poets }} шоир</span>
         </div>
         
         {% if search_query %}
-        <div class="alert alert-info">
-            <strong>نتایج جستجو برای:</strong> "{{ search_query }}"
-            <a href="{% url 'home' %}" class="btn btn-sm btn-outline-secondary ms-2">پاک کردن جستجو</a>
+        <div class="alert alert-info fade-in">
+            <strong>Натиҷаҳои ҷустуҷў барои:</strong> "{{ search_query }}"
+            <a href="{% url 'home' %}" class="btn btn-sm btn-outline-secondary ms-2">Ҷустуҷўро пок кунед</a>
         </div>
         {% endif %}
     </div>
@@ -22,37 +22,50 @@
 <div class="row">
     {% for poet in page_obj %}
     <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-        <div class="card poet-card h-100">
+        <div class="card poet-card fade-in">
             {% if poet.photo %}
-            <img src="{{ poet.photo.url }}" class="card-img-top" alt="{{ poet.name }}" style="height: 200px; object-fit: cover;">
+            <img src="{{ poet.photo.url }}" class="card-img-top" alt="{{ poet.name }}">
             {% else %}
-            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                <i class="fas fa-user-circle fa-3x text-muted"></i>
+            <div class="card-img-top" style="height: 200px; background: linear-gradient(135deg, #f1f5f9, #e2e8f0); display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 3rem;">
+                👤
             </div>
             {% endif %}
             
-            <div class="card-body d-flex flex-column">
+            <div class="card-body">
                 <h5 class="card-title">{{ poet.name }}</h5>
                 
                 <div class="mb-2">
                     {% if poet.birth_date %}
                     <small class="text-muted">
-                        متولد: {{ poet.birth_date|date:"Y" }}
-                        {% if poet.death_date %} - فوت: {{ poet.death_date|date:"Y" }}{% endif %}
+                        Таваллуд: {{ poet.birth_date|date:"Y" }}
+                        {% if poet.death_date %} - Вафот: {{ poet.death_date|date:"Y" }}{% endif %}
                     </small>
                     {% endif %}
                 </div>
                 
-                <p class="card-text flex-grow-1">
+                <p class="card-text">
                     {{ poet.biography|truncatewords:20 }}
                 </p>
                 
                 <div class="mt-auto">
                     <a href="{% url 'poet_detail' poet.slug %}" class="btn btn-primary btn-sm">
-                        مشاهده آثار
+                        Осорро дидан
                     </a>
                     <small class="text-muted ms-2">
-                        {{ poet.books.count }} کتاب
+                        {{ poet.books.count }} китоб
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+                </p>
+                
+                <div class="mt-auto">
+                    <a href="{% url 'poet_detail' poet.slug %}" class="btn btn-primary btn-sm">
+                        Осорро дидан
+                    </a>
+                    <small class="text-muted ms-2">
+                        {{ poet.books.count }} китоб
                     </small>
                 </div>
             </div>
@@ -60,11 +73,11 @@
     </div>
     {% empty %}
     <div class="col-12">
-        <div class="alert alert-warning text-center">
+        <div class="alert alert-warning text-center fade-in">
             {% if search_query %}
-                هیچ شاعری با این جستجو یافت نشد.
+                Бо ин ҷустуҷў ҳеч шоире ёфт нашуд.
             {% else %}
-                هنوز هیچ شاعری اضافه نشده است.
+                Ҳанӯз ҳеч шоире илова нашудааст.
             {% endif %}
         </div>
     </div>
@@ -73,11 +86,11 @@
 
 <!-- Pagination -->
 {% if page_obj.has_other_pages %}
-<nav aria-label="صفحه‌بندی شاعران">
+<nav aria-label="Саҳифабандии шоирон">
     <ul class="pagination justify-content-center">
         {% if page_obj.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" aria-label="قبلی">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" aria-label="Пешин">
                 <span aria-hidden="true">&laquo;</span>
             </a>
         </li>
@@ -97,7 +110,7 @@
         
         {% if page_obj.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" aria-label="بعدی">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" aria-label="Оянда">
                 <span aria-hidden="true">&raquo;</span>
             </a>
         </li>

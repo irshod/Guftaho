@@ -4,18 +4,18 @@ from django.utils.text import slugify
 
 
 class Poet(models.Model):
-    name = models.CharField(max_length=200, verbose_name="نام")
+    name = models.CharField(max_length=200, verbose_name="Ном")
     slug = models.SlugField(unique=True, blank=True)
-    birth_date = models.DateField(null=True, blank=True, verbose_name="таърихи таваллуд")
-    death_date = models.DateField(null=True, blank=True, verbose_name="таърихи вафот")
-    biography = models.TextField(verbose_name="таржумаи ҳол")
-    photo = models.ImageField(upload_to='poets/', null=True, blank=True, verbose_name="акс")
+    birth_date = models.DateField(null=True, blank=True, verbose_name="Санаи таваллуд")
+    death_date = models.DateField(null=True, blank=True, verbose_name="Санаи вафот")
+    biography = models.TextField(verbose_name="Таржумаи ҳол")
+    photo = models.ImageField(upload_to='poets/', null=True, blank=True, verbose_name="Акс")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "شاعر"
-        verbose_name_plural = "شاعران"
+        verbose_name = "Шоир"
+        verbose_name_plural = "Шоирон"
         ordering = ['name']
 
     def __str__(self):
@@ -31,18 +31,18 @@ class Poet(models.Model):
 
 
 class Book(models.Model):
-    title = models.CharField(max_length=200, verbose_name="унвон")
+    title = models.CharField(max_length=200, verbose_name="Унвон")
     slug = models.SlugField(unique=True, blank=True)
-    poet = models.ForeignKey(Poet, on_delete=models.CASCADE, related_name='books', verbose_name="шоир")
-    description = models.TextField(blank=True, verbose_name="тавзеҳ")
-    publication_date = models.DateField(null=True, blank=True, verbose_name="таърихи нашр")
-    cover_image = models.ImageField(upload_to='books/', null=True, blank=True, verbose_name="акси рӯи китоб")
+    poet = models.ForeignKey(Poet, on_delete=models.CASCADE, related_name='books', verbose_name="Шоир")
+    description = models.TextField(blank=True, verbose_name="Тавзеҳ")
+    publication_date = models.DateField(null=True, blank=True, verbose_name="Санаи нашр")
+    cover_image = models.ImageField(upload_to='books/', null=True, blank=True, verbose_name="Акси рӯи китоб")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "کتاب"
-        verbose_name_plural = "کتابها"
+        verbose_name = "Китоб"
+        verbose_name_plural = "Китобҳо"
         ordering = ['-publication_date']
 
     def __str__(self):
@@ -58,17 +58,17 @@ class Book(models.Model):
 
 
 class Poem(models.Model):
-    title = models.CharField(max_length=200, verbose_name="унвон")
+    title = models.CharField(max_length=200, verbose_name="Унвон")
     slug = models.SlugField(blank=True)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='poems', verbose_name="китоб")
-    content = models.TextField(verbose_name="матн")
-    order = models.PositiveIntegerField(default=0, verbose_name="тартиб")
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='poems', verbose_name="Китоб")
+    content = models.TextField(verbose_name="Матн")
+    order = models.PositiveIntegerField(default=0, verbose_name="Тартиб")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = "شعر"
-        verbose_name_plural = "اشعار"
+        verbose_name = "Шеър"
+        verbose_name_plural = "Шеърҳо"
         ordering = ['order', 'title']
         unique_together = ['book', 'slug']
 
