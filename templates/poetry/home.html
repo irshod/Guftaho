@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}گفتگو - شاعران تاجیک{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>شاعران تاجیک</h1>
+            <span class="badge bg-primary fs-6">{{ total_poets }} شاعر</span>
+        </div>
+        
+        {% if search_query %}
+        <div class="alert alert-info">
+            <strong>نتایج جستجو برای:</strong> "{{ search_query }}"
+            <a href="{% url 'home' %}" class="btn btn-sm btn-outline-secondary ms-2">پاک کردن جستجو</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    {% for poet in page_obj %}
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+        <div class="card poet-card h-100">
+            {% if poet.photo %}
+            <img src="{{ poet.photo.url }}" class="card-img-top" alt="{{ poet.name }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                <i class="fas fa-user-circle fa-3x text-muted"></i>
+            </div>
+            {% endif %}
+            
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ poet.name }}</h5>
+                
+                <div class="mb-2">
+                    {% if poet.birth_date %}
+                    <small class="text-muted">
+                        متولد: {{ poet.birth_date|date:"Y" }}
+                        {% if poet.death_date %} - فوت: {{ poet.death_date|date:"Y" }}{% endif %}
+                    </small>
+                    {% endif %}
+                </div>
+                
+                <p class="card-text flex-grow-1">
+                    {{ poet.biography|truncatewords:20 }}
+                </p>
+                
+                <div class="mt-auto">
+                    <a href="{% url 'poet_detail' poet.slug %}" class="btn btn-primary btn-sm">
+                        مشاهده آثار
+                    </a>
+                    <small class="text-muted ms-2">
+                        {{ poet.books.count }} کتاب
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-warning text-center">
+            {% if search_query %}
+                هیچ شاعری با این جستجو یافت نشد.
+            {% else %}
+                هنوز هیچ شاعری اضافه نشده است.
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if page_obj.has_other_pages %}
+<nav aria-label="صفحه‌بندی شاعران">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" aria-label="قبلی">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% endif %}
+        
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <li class="page-item active">
+            <span class="page-link">{{ num }}</span>
+        </li>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}">{{ num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" aria-label="بعدی">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}
