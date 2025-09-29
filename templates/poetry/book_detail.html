@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ book.title }} - {{ book.poet.name }} - Гуфтугў{% endblock %}
+
+{% block content %}
+<!-- Book Header Section -->
+<div class="row align-items-center mb-5 scroll-reveal">
+    <div class="col-md-4">
+        <div class="book-detail-cover">
+            {% if book.cover_image %}
+            <img src="{{ book.cover_image.url }}" class="book-detail-image shadow-lg" alt="{{ book.title }}">
+            {% else %}
+            <div class="book-detail-placeholder shadow-lg">
+                <span class="book-placeholder-icon">📖</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <!-- Breadcrumb Navigation -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb-custom">
+                <li class="breadcrumb-item">
+                    <a href="{% url 'poetry:home' %}">🏠 Асосӣ</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{% url 'poetry:poet_detail' book.poet.slug %}">👤 {{ book.poet.name }}</a>
+                </li>
+                <li class="breadcrumb-item active">📖 {{ book.title }}</li>
+            </ol>
+        </nav>
+        
+        <div class="book-detail-info">
+            <h1 class="book-detail-title">{{ book.title }}</h1>
+            <h4 class="book-detail-author">
+                <a href="{% url 'poetry:poet_detail' book.poet.slug %}">{{ book.poet.name }}</a>
+            </h4>
+            
+            <div class="book-meta-info">
+                {% if book.publication_date %}
+                <div class="meta-badge">
+                    <span class="meta-icon">📅</span>
+                    <span>Санаи нашр: {{ book.publication_date|date:"j F Y" }}</span>
+                </div>
+                {% endif %}
+                
+                <div class="meta-badge">
+                    <span class="meta-icon">📝</span>
+                    <span>{{ total_poems }} шеър</span>
+                </div>
+            </div>
+            
+            {% if book.description %}
+            <div class="book-description">
+                <h6 class="description-title">💫 Дар бораи китоб</h6>
+                <div class="description-content">
+                    {{ book.description|linebreaks }}
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="book-stats">
+                <div class="stat-highlight">
+                    <div class="stat-number">{{ total_poems }}</div>
+                    <div class="stat-text">шеър дар ин китоб</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Poems Section -->
+<div class="section-divider scroll-reveal"></div>
+
+<div class="row mb-4 scroll-reveal">
+    <div class="col-12">
+        <div class="section-header">
+            <h2 class="section-title">
+                <span class="title-icon">📝</span>
+                Шеърҳои китоб
+            </h2>
+            <p class="section-subtitle">Маҷмӯаи комили шеърҳо аз ин китоб</p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    {% for poem in page_obj %}
+    <div class="col-lg-4 col-md-6">
+        <div class="poem-card scroll-reveal poem-card-{{ forloop.counter }}">
+            <div class="poem-card-header">
+                <div class="poem-number">{{ poem.order|default:forloop.counter }}</div>
+                <div class="poem-actions">
+                    <a href="{% url 'poetry:poem_detail' poem.slug %}" class="action-btn" title="Хондан">
+                        👁️
+                    </a>
+                </div>
+            </div>
+            
+            <div class="poem-card-body">
+                <h5 class="poem-title">
+                    <a href="{% url 'poetry:poem_detail' poem.slug %}">{{ poem.title }}</a>
+                </h5>
+                
+                <div class="poem-preview">
+                    {{ poem.content|truncatewords:15|linebreaksbr }}
+                    {% if poem.content|length > 100 %}
+                        <div class="poem-continue">
+                            <span>... идома дорад</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="poem-card-footer">
+                <a href="{% url 'poetry:poem_detail' poem.slug %}" class="btn btn-primary btn-sm">
+                    <span class="btn-icon">📖</span>
+                    Пурра хондан
+                </a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="empty-state scroll-reveal">
+            <div class="empty-icon">📝</div>
+            <h4 class="empty-title">Ҳанӯз шеъре нест</h4>
+            <p class="empty-message">Дар ин китоб ҳанӯз шеъре илова нашудааст.</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Enhanced Pagination -->
+{% if page_obj.has_other_pages %}
+<nav aria-label="Саҳифабандии шеърҳо" class="scroll-reveal mt-5">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Пешин">
+                <span aria-hidden="true">‹ Пешин</span>
+            </a>
+        </li>
+        {% endif %}
+        
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <li class="page-item active">
+            <span class="page-link">{{ num }}</span>
+        </li>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+        
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Оянда">
+                <span aria-hidden="true">Оянда ›</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+<!-- Navigation Section -->
+<div class="row mt-5 scroll-reveal">
+    <div class="col-12">
+        <div class="navigation-section">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <a href="{% url 'poetry:poet_detail' book.poet.slug %}" class="btn btn-outline-primary">
+                    <span class="btn-icon">←</span>
+                    Ба осори {{ book.poet.name }}
+                </a>
+                <a href="{% url 'poetry:home' %}" class="btn btn-outline-secondary">
+                    <span class="btn-icon">🏠</span>
+                    Ба саҳифаи асосӣ
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

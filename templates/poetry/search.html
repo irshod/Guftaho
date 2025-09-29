@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% block title %}Ҷустуҷӯ - Гуфтугў{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Enhanced Search Form -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="search-container scroll-reveal">
+                <div class="search-header text-center mb-4">
+                    <h1 class="search-title">
+                        <span class="title-icon">🔍</span>
+                        Ҷустуҷӯи шеърҳо
+                    </h1>
+                    <p class="search-subtitle">Дар маҷмӯаи бойи шеърҳо ҷустуҷӯ кунед</p>
+                </div>
+                
+                <form method="get" class="search-form">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label for="query" class="form-label fw-bold">
+                                <span class="fs-5">🔤</span>
+                                <strong>Калидвожа:</strong>
+                            </label>
+                            <input type="text" class="form-control form-control-lg search-input" 
+                                   id="query" name="q" value="{{ query|default:'' }}" 
+                                   placeholder="Калидвожа ё матни шеърро нависед...">
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <label for="poet" class="form-label fw-bold">
+                                <span class="fs-5">👤</span>
+                                <strong>Шоир:</strong>
+                            </label>
+                            <select class="form-control form-control-lg search-select" id="poet" name="poet">
+                                <option value="">Ҳамаи шоирон</option>
+                                {% for poet in poets %}
+                                <option value="{{ poet.slug }}" {% if poet_filter == poet.slug %}selected{% endif %}>
+                                    {{ poet.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <label for="book" class="form-label fw-bold">
+                                <span class="fs-5">📚</span>
+                                <strong>Китоб:</strong>
+                            </label>
+                            <select class="form-control form-control-lg search-select" id="book" name="book">
+                                <option value="">Ҳамаи китобҳо</option>
+                                {% for book in books %}
+                                <option value="{{ book.slug }}" {% if book_filter == book.slug %}selected{% endif %}>
+                                    {{ book.title }} - {{ book.poet.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="search-actions text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg search-btn">
+                            <span class="btn-icon">🔍</span>
+                            Ҷустуҷӯ кунед
+                        </button>
+                        <a href="{% url 'poetry:search' %}" class="btn btn-outline-secondary btn-lg ms-3">
+                            <span class="btn-icon">🗑️</span>
+                            Пок кунед
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Results -->
+    {% if query or poet_filter or book_filter %}
+    <div class="row scroll-reveal">
+        <div class="col-12">
+            <div class="results-header">
+                <h3 class="results-title">
+                    <span class="title-icon">✨</span>
+                    Натиҷаҳои ҷустуҷӯ
+                </h3>
+                {% if page_obj %}
+                <span class="results-count">{{ page_obj.paginator.count }} натиҷа ёфт шуд</span>
+                {% endif %}
+            </div>
+            
+            {% if query or poet_filter or book_filter %}
+            <div class="search-summary scroll-reveal">
+                <div class="summary-content">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="summary-icon">🔍</span>
+                        <span class="summary-text">Ҷустуҷӯ барои:</span>
+                    </div>
+                    
+                    <div class="search-filters">
+                        {% if query %}
+                        <span class="filter-badge filter-primary">
+                            <span class="filter-icon">🔤</span>
+                            "{{ query }}"
+                        </span>
+                        {% endif %}
+                        
+                        {% if poet_filter %}
+                        <span class="filter-badge filter-secondary">
+                            <span class="filter-icon">👤</span>
+                            {% for poet in poets %}
+                                {% if poet.slug == poet_filter %}{{ poet.name }}{% endif %}
+                            {% endfor %}
+                        </span>
+                        {% endif %}
+                        
+                        {% if book_filter %}
+                        <span class="filter-badge filter-tertiary">
+                            <span class="filter-icon">📚</span>
+                            {% for book in books %}
+                                {% if book.slug == book_filter %}{{ book.title }}{% endif %}
+                            {% endfor %}
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Search Results Grid -->
+    <div class="row g-4">
+        {% for poem in page_obj %}
+        <div class="col-12">
+            <div class="result-card scroll-reveal result-card-{{ forloop.counter }}">
+                <div class="result-content">
+                    <div class="result-header">
+                        <h5 class="result-title">
+                            <a href="{% url 'poetry:poem_detail' poem.slug %}">
+                                <span class="title-icon">📝</span>
+                                {{ poem.title }}
+                            </a>
+                        </h5>
+                        
+                        <div class="result-meta">
+                            <span class="meta-badge meta-primary">
+                                <a href="{% url 'poetry:poet_detail' poem.book.poet.slug %}">
+                                    <span class="meta-icon">👤</span>
+                                    {{ poem.book.poet.name }}
+                                </a>
+                            </span>
+                            
+                            {% if poem.book %}
+                            <span class="meta-badge meta-secondary">
+                                <a href="{% url 'poetry:book_detail' poem.book.slug %}">
+                                    <span class="meta-icon">📚</span>
+                                    {{ poem.book.title }}
+                                </a>
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    {% if poem.content %}
+                    <div class="result-preview">
+                        <div class="preview-content">
+                            {{ poem.content|truncatewords:25|linebreaksbr }}
+                            {% if poem.content|length > 150 %}
+                                <div class="preview-continue">
+                                    <span>... идома дорад</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="result-actions">
+                        <a href="{% url 'poetry:poem_detail' poem.slug %}" class="btn btn-primary btn-sm">
+                            <span class="btn-icon">📖</span>
+                            Пурра хондан
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="empty-results scroll-reveal">
+                <div class="empty-icon">🔍</div>
+                <h4 class="empty-title">Ҳеч натиҷае ёфт нашуд</h4>
+                <p class="empty-message">Калидвожаҳои дигар кӯшиш кунед ё филтрҳоро тағйир диҳед.</p>
+                <a href="{% url 'poetry:search' %}" class="btn btn-primary btn-lg mt-3">
+                    <span class="btn-icon">🔄</span>
+                    Ҷустуҷӯи нав
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Enhanced Pagination -->
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Саҳифабандии натиҷаҳо" class="scroll-reveal mt-5">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if poet_filter %}&poet={{ poet_filter }}{% endif %}{% if book_filter %}&book={{ book_filter }}{% endif %}" 
+                   aria-label="Пешин">
+                    <span aria-hidden="true">‹ Пешин</span>
+                </a>
+            </li>
+            {% endif %}
+            
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active">
+                <span class="page-link">{{ num }}</span>
+            </li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}{% if poet_filter %}&poet={{ poet_filter }}{% endif %}{% if book_filter %}&book={{ book_filter }}{% endif %}">{{ num }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if poet_filter %}&poet={{ poet_filter }}{% endif %}{% if book_filter %}&book={{ book_filter }}{% endif %}" 
+                   aria-label="Оянда">
+                    <span aria-hidden="true">Оянда ›</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

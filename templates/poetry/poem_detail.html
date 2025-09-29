@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ poem.title }} - {{ poem.book.poet.name }} - Гуфтугў{% endblock %}
+
+{% block content %}
+<!-- Enhanced Breadcrumb Navigation -->
+<nav aria-label="breadcrumb" class="scroll-reveal mb-4">
+    <ol class="breadcrumb-custom">
+        <li class="breadcrumb-item">
+            <a href="{% url 'poetry:home' %}">🏠 Асосӣ</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'poetry:poet_detail' poem.book.poet.slug %}">👤 {{ poem.book.poet.name }}</a>
+        </li>
+        {% if poem.book %}
+        <li class="breadcrumb-item">
+            <a href="{% url 'poetry:book_detail' poem.book.slug %}">📚 {{ poem.book.title }}</a>
+        </li>
+        {% endif %}
+        <li class="breadcrumb-item active">📝 {{ poem.title }}</li>
+    </ol>
+</nav>
+
+<!-- Poem Header -->
+<div class="row scroll-reveal mb-5">
+    <div class="col-12">
+        <div class="poem-header text-center">
+            <h1 class="poem-title-main">{{ poem.title }}</h1>
+            
+            <div class="poem-meta-info">
+                <div class="meta-item">
+                    <span class="meta-label">Шоир:</span>
+                    <a href="{% url 'poetry:poet_detail' poem.book.poet.slug %}" class="meta-link">
+                        {{ poem.book.poet.name }}
+                    </a>
+                </div>
+                
+                {% if poem.book %}
+                <div class="meta-item">
+                    <span class="meta-label">Китоб:</span>
+                    <a href="{% url 'poetry:book_detail' poem.book.slug %}" class="meta-link">
+                        {{ poem.book.title }}
+                    </a>
+                </div>
+                {% endif %}
+                
+                {% if poem.created_at %}
+                <div class="meta-item">
+                    <span class="meta-label">Санаи илова:</span>
+                    <span class="meta-text">{{ poem.created_at|date:"j F Y" }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Poem Navigation -->
+<div class="row mb-5 scroll-reveal">
+    <div class="col-12">
+        <div class="poem-navigation">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="nav-prev">
+                    {% if previous_poem %}
+                    <a href="{% url 'poetry:poem_detail' previous_poem.slug %}" class="btn btn-outline-primary">
+                        <span class="btn-icon">←</span>
+                        Шеъри пешин
+                    </a>
+                    {% else %}
+                    <div class="nav-placeholder"></div>
+                    {% endif %}
+                </div>
+                
+                <div class="nav-center">
+                    {% if poem.book %}
+                    <a href="{% url 'poetry:book_detail' poem.book.slug %}" class="btn btn-outline-secondary">
+                        <span class="btn-icon">📚</span>
+                        Ҳамаи шеърҳо
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <div class="nav-next">
+                    {% if next_poem %}
+                    <a href="{% url 'poetry:poem_detail' next_poem.slug %}" class="btn btn-outline-primary">
+                        Шеъри оянда
+                        <span class="btn-icon">→</span>
+                    </a>
+                    {% else %}
+                    <div class="nav-placeholder"></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Poem Content -->
+<div class="row scroll-reveal">
+    <div class="col-12">
+        <div class="poem-content-container">
+            <div class="poem-content-wrapper">
+                <div class="poem-text">
+                    {{ poem.content|linebreaksbr }}
+                </div>
+                
+                {% if poem.notes %}
+                <div class="poem-notes">
+                    <h6 class="notes-title">
+                        <span class="notes-icon">💭</span>
+                        Эзоҳот
+                    </h6>
+                    <div class="notes-content">
+                        {{ poem.notes|linebreaksbr }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Action Buttons Section -->
+<div class="row mt-5 scroll-reveal">
+    <div class="col-12">
+        <div class="poem-actions">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-outline-primary w-100" onclick="window.print()">
+                        <span class="btn-icon">🖨️</span>
+                        Чоп кардан
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-outline-secondary w-100 copy-text">
+                        <span class="btn-icon">📋</span>
+                        Нусха бардоштан
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-outline-success w-100" onclick="sharePoem()">
+                        <span class="btn-icon">📤</span>
+                        Мубодила кардан
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Social Share Section -->
+<div class="row mt-4 scroll-reveal">
+    <div class="col-12">
+        <div class="social-share">
+            <h6 class="share-title text-center mb-3">
+                <span class="share-icon">🌐</span>
+                Дар шабакаҳои иҷтимоӣ мубодила кунед
+            </h6>
+            
+            <div class="share-buttons justify-content-center">
+                <button class="share-btn facebook" onclick="shareOnFacebook()" title="Facebook">
+                    📘
+                </button>
+                <button class="share-btn twitter" onclick="shareOnTwitter()" title="Twitter">
+                    🐦
+                </button>
+                <button class="share-btn telegram" onclick="shareOnTelegram()" title="Telegram">
+                    ✈️
+                </button>
+                <button class="share-btn whatsapp" onclick="shareOnWhatsApp()" title="WhatsApp">
+                    💬
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation Section -->
+<div class="row mt-5 scroll-reveal">
+    <div class="col-12">
+        <div class="bottom-navigation">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                {% if previous_poem %}
+                <a href="{% url 'poetry:poem_detail' previous_poem.slug %}" class="btn btn-primary">
+                    <span class="btn-icon">←</span>
+                    {{ previous_poem.title|truncatechars:20 }}
+                </a>
+                {% else %}
+                <div></div>
+                {% endif %}
+                
+                <div class="navigation-center">
+                    {% if poem.book %}
+                    <a href="{% url 'poetry:book_detail' poem.book.slug %}" class="btn btn-outline-secondary me-2">
+                        <span class="btn-icon">📚</span>
+                        Ба китоб
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'poetry:poet_detail' poem.book.poet.slug %}" class="btn btn-outline-primary">
+                        <span class="btn-icon">👤</span>
+                        Ба шоир
+                    </a>
+                </div>
+                
+                {% if next_poem %}
+                <a href="{% url 'poetry:poem_detail' next_poem.slug %}" class="btn btn-primary">
+                    {{ next_poem.title|truncatechars:20 }}
+                    <span class="btn-icon">→</span>
+                </a>
+                {% else %}
+                <div></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% load static %}
+<script src="{% static 'js/poem.js' %}"></script>
+<script>
+// Initialize poem data for JavaScript functions
+window.poemData = {
+    title: "{{ poem.title }}",
+    poet: "{{ poem.book.poet.name }}",
+    url: window.location.href
+};
+</script>
+{% endblock %}

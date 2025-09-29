@@ -1,0 +1,4 @@
+{{ object.title }}
+{{ object.content }}
+{{ object.book.title }}
+{{ object.book.poet.name }}

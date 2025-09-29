@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="tg" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Гуфтугў - Китобхонаи шеъри тоҷик{% endblock %}</title>
+    
+    <!-- External CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="fade-in">
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle keyboard-focus" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
+        🌙
+    </button>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand keyboard-focus" href="{% url 'poetry:home' %}">Гуфтугў</a>
+            
+            <div class="nav-links">
+                <a class="nav-link keyboard-focus" href="{% url 'poetry:home' %}">Асосӣ</a>
+                <a class="nav-link keyboard-focus" href="{% url 'poetry:search' %}">Ҷустуҷў</a>
+                
+                <form class="search-form" method="get" action="{% url 'poetry:home' %}">
+                    <input class="form-control keyboard-focus" type="search" placeholder="Ҷустуҷўи тез..." name="search" value="{{ search_query|default:'' }}">
+                    <button class="btn btn-outline-light keyboard-focus" type="submit">Ҷустуҷў</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container my-4 page-transition" id="main-content">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} scroll-reveal">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <h5>Гуфтугў - Китобхонаи шеъри тоҷик</h5>
+                    <p class="mb-0">Маҷмӯаи ҷомеи осори шоирони номдори тоҷик</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <small class="text-muted">
+                        бо ❤️ барои ҳифзу ташри фарҳанги тоҷик сохта шуд
+                    </small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    {% block extra_js %}
+    {% endblock %}
+    
+    <!-- External JavaScript -->
+    {% load static %}
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

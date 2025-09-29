@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}Гуфтугў - Шоирони тоҷик{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row scroll-reveal">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <div>
+                    <h1 class="mb-2">📚 Шоирони тоҷик</h1>
+                    <p class="text-muted fs-5">Омўзишгоҳи адабиёти классикии тоҷик</p>
+                </div>
+                <div class="text-end">
+                    <span class="badge fs-6">{{ total_poets }} шоир</span>
+                    <br>
+                    <small class="text-muted">дар маҷмӯаи мо</small>
+                </div>
+            </div>
+            
+            {% if search_query %}
+            <div class="alert alert-info scroll-reveal border-0" style="border-radius: 15px; background: linear-gradient(135deg, #dbeafe, #bfdbfe);">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <strong class="text-primary">🔍 Натиҷаҳои ҷустуҷў барои:</strong> 
+                        <span class="fw-bold">"{{ search_query }}"</span>
+                    </div>
+                    <a href="{% url 'poetry:home' %}" class="btn btn-outline-primary btn-sm">
+                        🗑️ Пок кунед
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        {% for poet in page_obj %}
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card poet-card scroll-reveal poet-card-{{ forloop.counter0|add:1 }}">
+                {% if poet.photo %}
+                <img src="{{ poet.photo.url }}" class="card-img-top" alt="{{ poet.name }}" loading="lazy" 
+                     style="height: 220px; object-fit: cover;">
+                {% else %}
+                <div class="card-img-top d-flex align-items-center justify-content-center" 
+                     style="height: 220px; background: linear-gradient(135deg, #f1f5f9, #e2e8f0); color: #94a3b8; font-size: 4rem;">
+                    👤
+                </div>
+                {% endif %}
+                
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title text-primary fw-bold mb-3">
+                        ✨ {{ poet.name }}
+                    </h5>
+                    
+                    {% if poet.birth_date %}
+                    <div class="mb-3">
+                        <small class="text-muted d-flex align-items-center gap-1">
+                            <span>📅</span>
+                            <span>{{ poet.birth_date|date:"Y" }}{% if poet.death_date %} - {{ poet.death_date|date:"Y" }}{% else %} - ҳозир{% endif %}</span>
+                        </small>
+                    </div>
+                    {% endif %}
+                    
+                    <p class="card-text text-muted mb-4 flex-grow-1">
+                        {{ poet.biography|truncatewords:18 }}
+                    </p>
+                    
+                    <div class="mt-auto">
+                        {% if poet.slug %}
+                        <div class="d-grid">
+                            <a href="{% url 'poetry:poet_detail' poet.slug %}" 
+                               class="btn btn-primary btn-lg mb-2">
+                                📖 Осорро дидан
+                            </a>
+                        </div>
+                        <div class="text-center">
+                            <small class="text-muted d-flex align-items-center justify-content-center gap-2">
+                                <span class="badge bg-secondary">
+                                    📚 {{ poet.books.count }} китоб
+                                </span>
+                                {% if poet.view_count %}
+                                <span class="badge bg-success">
+                                    �️ {{ poet.view_count }}
+                                </span>
+                                {% endif %}
+                            </small>
+                        </div>
+                        {% else %}
+                        <div class="d-grid">
+                            <span class="btn btn-secondary disabled">
+                                📖 Дастрас нест
+                            </span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="text-center py-5 scroll-reveal">
+                <div class="mb-4">
+                    {% if search_query %}
+                        <div class="display-1 text-muted mb-3">🔍</div>
+                        <h3 class="text-muted">Ҳеч шоире ёфт нашуд</h3>
+                        <p class="text-muted fs-5">Бо ин ҷустуҷў ҳеч натиҷае дастрас нест.</p>
+                        <a href="{% url 'poetry:home' %}" class="btn btn-primary btn-lg mt-3">
+                            🏠 Ба саҳифаи асосӣ баргардед
+                        </a>
+                    {% else %}
+                        <div class="display-1 text-muted mb-3">�</div>
+                        <h3 class="text-muted">Ҳанӯз ҳеч шоире илова нашудааст</h3>
+                        <p class="text-muted fs-5">Маҷмӯаи мо дар ҳоли омодашавӣ аст.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Enhanced Pagination -->
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Саҳифабандии шоирон" class="scroll-reveal mt-5">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                   aria-label="Пешин">
+                    <span aria-hidden="true">‹ Пешин</span>
+                </a>
+            </li>
+            {% endif %}
+            
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active">
+                <span class="page-link">{{ num }}</span>
+            </li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}{% if search_query %}&search={{ search_query }}{% endif %}">{{ num }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}" 
+                   aria-label="Оянда">
+                    <span aria-hidden="true">Оянда ›</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

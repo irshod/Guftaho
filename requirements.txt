@@ -1,0 +1,26 @@
+Django==5.2.6
+Pillow==11.3.0
+django-crispy-forms==2.4
+crispy-bootstrap5==2025.6
+
+# Core functionality packages
+python-decouple==3.8
+django-extensions==3.2.3
+django-debug-toolbar==4.4.6
+django-filter==24.3
+djangorestframework==3.16.1
+django-cors-headers==4.5.0
+
+# Search functionality
+Whoosh==2.7.4
+django-haystack==3.3.0
+
+# Additional features
+django-taggit==5.0.1
+django-environ==0.11.2
+
+# Optional packages (install separately if needed)
+# psycopg2-binary==2.9.9  # For PostgreSQL
+# django-storages==1.14.4  # For cloud storage
+# celery==5.3.4  # For background tasks
+# redis==5.0.8  # For caching
